@@ -4,9 +4,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Investing Time</title>
+    <script>
+        function convertCSVtoJSON(csv) {
+            function csvJSON(csv){
+                var lines=csv.split("\n");
+
+                var result = [];
+
+                // NOTE: If your columns contain commas in their values, you'll need
+                // to deal with those before doing the next step 
+                // (you might convert them to &&& or something, then covert them back later)
+                // jsfiddle showing the issue https://jsfiddle.net/
+                var headers=lines[0].split(",");
+
+                for(var i=1;i<lines.length;i++){
+
+                    var obj = {};
+                    var currentline=lines[i].split(",");
+
+                    for(var j=0;j<headers.length;j++){
+                        obj[headers[j]] = currentline[j];
+                    }
+
+                    result.push(obj);
+
+                }
+
+                //return result; //JavaScript object
+                return JSON.stringify(result); //JSON
+                }
+        }
+
+        function uploadHistoricalData() {
+            let file = document.getElementById("historicalDataInput").files[0];
+            console.log(file);
+            console.log(convertCSVtoJSON(file.text));
+        }
+    </script>
 </head>
 <body>
-    
+    <h1>Investing Time</h1>
+    <p>This aims to answer the question: "How long do I need to invest in order to get a certain return?"</p>
+    Investing.com Historical Data CSV: <input id="historicalDataInput" type="file" accept="text/csv"><br><br>
+    <button onclick="uploadHistoricalData()">Upload</button>
+    <div id="tableDiv"></div>
 </body>
 </html>
