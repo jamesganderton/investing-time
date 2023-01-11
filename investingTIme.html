@@ -6,9 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investing Time</title>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.1.2/chart.min.js"></script>-->
     <script>
 
         let inputData = [];
+
+        function createInputDataTable() {
+            let tableDiv = document.getElementById("tableDiv");
+            let table = document.createElement("table");
+            let tHead = document.createElement("thead");
+            let headers = ["Date", "Price"];
+            for (let i = 0; i < headers.length; i++) {
+                let header = document.createElement("th");
+                header.innerHTML = headers[i];
+                tHead.appendChild(header);
+            }
+            table.appendChild(tHead);
+            tableDiv.appendChild(table);
+            let tBody = document.createElement("tbody");
+            table.appendChild(tBody);
+            for (let i = 0; i < inputData.length; i++) {
+                let tr = document.createElement("tr");
+                for (let j = 0; j < headers.length; j++) {
+                    let td = document.createElement("td");
+                    let header = headers[j];
+                    td.innerHTML = inputData[i][header];
+                    tr.appendChild(td);
+                }
+                tBody.appendChild(tr);
+            }
+        }
 
         async function uploadHistoricalData() {
             let file = await document.getElementById("historicalDataInput").files[0].text();
@@ -20,11 +47,19 @@
 
             console.log(data);
 
-            inputData = data;
+            inputData = data.data;
+
+            createInputDataTable();
         }
 
-        function createInputDataTable() {
-            let tableDiv = document.getElementById("tableDiv");
+        async function calculateProbabilites() {
+            // add elements for minimum term in months or years and maximum term in months or years. this will drive a for loop.
+            // for every term within the range, for through each month in the data, and calculate the delta in price for the term.
+            // split potential returns into buckets, add an element for this? and min and max returns?
+            // calculate the annualised return for each term.
+            // for each bucket, count the number of terms which exceeded the return and create a probability from that.
+            // display a matrix of term length against return and populate with probability of exceeding that return with that term.
+            // display a graph of term length on x with probability on the y and each line represents a different return.
         }
 
     </script>
