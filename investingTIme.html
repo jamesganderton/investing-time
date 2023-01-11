@@ -5,42 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investing Time</title>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.js"></script>
     <script>
-        function convertCSVtoJSON(csv) {
-            function csvJSON(csv){
-                var lines=csv.split("\n");
 
-                var result = [];
+        let inputData = [];
 
-                // NOTE: If your columns contain commas in their values, you'll need
-                // to deal with those before doing the next step 
-                // (you might convert them to &&& or something, then covert them back later)
-                // jsfiddle showing the issue https://jsfiddle.net/
-                var headers=lines[0].split(",");
+        async function uploadHistoricalData() {
+            let file = await document.getElementById("historicalDataInput").files[0].text();
 
-                for(var i=1;i<lines.length;i++){
+            let data = await Papa.parse(file, {
+                header: true,
+                dynamicTyping: true
+            });
 
-                    var obj = {};
-                    var currentline=lines[i].split(",");
+            console.log(data);
 
-                    for(var j=0;j<headers.length;j++){
-                        obj[headers[j]] = currentline[j];
-                    }
-
-                    result.push(obj);
-
-                }
-
-                //return result; //JavaScript object
-                return JSON.stringify(result); //JSON
-                }
+            inputData = data;
         }
 
-        function uploadHistoricalData() {
-            let file = document.getElementById("historicalDataInput").files[0];
-            console.log(file);
-            console.log(convertCSVtoJSON(file.text));
+        function createInputDataTable() {
+            let tableDiv = document.getElementById("tableDiv");
         }
+
     </script>
 </head>
 <body>
