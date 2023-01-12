@@ -12,7 +12,10 @@
         let inputData = [];
 
         function createInputDataTable() {
-            let tableDiv = document.getElementById("tableDiv");
+            let tableDiv = document.getElementById("inputDataTableDiv");
+            let tableHeading = document.createElement("h2");
+            tableHeading.innerHTML = "Input Data";
+            tableDiv.appendChild(tableHeading);
             let table = document.createElement("table");
             let tHead = document.createElement("thead");
             let headers = ["Date", "Price"];
@@ -63,12 +66,29 @@
         }
 
     </script>
+    <style type="text/css" media="screen">
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid;
+        }
+    </style>
 </head>
 <body>
     <h1>Investing Time</h1>
     <p>This aims to answer the question: "How long do I need to invest in order to get a certain return?"</p>
     Investing.com Historical Data CSV: <input id="historicalDataInput" type="file" accept="text/csv"><br><br>
-    <button onclick="uploadHistoricalData()">Upload</button>
-    <div id="tableDiv"></div>
+    <button onclick="uploadHistoricalData()">Upload</button><br><br>
+    <div id="inputDataTableDiv"></div>
+    <h2>Processing Parameters</h2>
+    Min Term [months]: <input type="number" value="6"><br><br>
+    Max Term [months]: <input type="number" value="120"><br><br>
+    Term Interval [months]: <input type="number" value="3"><br><br>
+    Min Return [decimal]: <input type="number" value="0.0"><br><br>
+    Max Return [decimal]: <input type="number" value="0.15"><br><br>
+    Return Interval [decimal]: <input type="number" value="0.005"><br><br>
+    <button onclick="calculateProbabilites()">Process Data</button>
 </body>
 </html>
