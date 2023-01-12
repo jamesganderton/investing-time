@@ -10,6 +10,7 @@
     <script>
 
         let inputData = [];
+        let numberMonths = 0;
 
         function createInputDataTable() {
             let tableDiv = document.getElementById("inputDataTableDiv");
@@ -52,8 +53,28 @@
 
             inputData = data.data;
 
+            numberSamples = inputData.length;
+
             createInputDataTable();
         }
+
+        let terms = [];
+        let returns = [];
+        let results = [];
+
+        /*
+        let results = [
+            {
+                term: 6,
+                returnProbabilities: [
+                    {
+                        return: 0,
+                        probability: 1.0
+                    }
+                ]
+            }
+        ]
+        */
 
         async function calculateProbabilites() {
             // add elements for minimum term in months or years and maximum term in months or years. this will drive a for loop.
@@ -63,6 +84,49 @@
             // for each bucket, count the number of terms which exceeded the return and create a probability from that.
             // display a matrix of term length against return and populate with probability of exceeding that return with that term.
             // display a graph of term length on x with probability on the y and each line represents a different return.
+        
+            //first populate an array of terms from the input parameters
+            let minTerm = Number(document.getElementById("minTerm").value);
+            let maxTerm = Number(document.getElementById("maxTerm").value);
+            let termInterval = Number(document.getElementById("termInterval").value);
+
+            for (let i = 0; minTerm + i * termInterval <= maxTerm; i++) {
+                terms.push(minTerm + i * termInterval);
+            }
+
+            console.log(terms)
+
+            //populate an array of return thresholds from inputs
+
+            let minReturn = Number(document.getElementById("minReturn").value);
+            let maxReturn = Number(document.getElementById("maxReturn").value);
+            let returnInterval = Number(document.getElementById("returnInterval").value);
+
+            for (let i = 0; minReturn + i * returnInterval <= maxReturn; i++) {
+                returns.push(minReturn + i * returnInterval);
+            }
+
+            console.log(returns)
+
+            for (let i = 0; i < terms.length; i++) {
+                console.log("term index: " + i);
+                let termLength = terms[i];
+                for (let j = 0; j < inputData.length; j++) {
+                    console.log("price index: " + j);
+                    let firstSampleIndex = j;
+                    let secondSampleIndex = j + termLength;
+                    if (secondSampleIndex > numberSamples) {
+                        break
+                    }
+                    let firstPrice = inputData[firstSampleIndex].Price;
+                    let secondPrice = inputData[secondSampleIndex].Price;
+                    let deltaPrice = secondPrice - firstPrice;
+                    let measuredReturn = deltaPrice / firstPrice;
+                    let annualisedReturn = measuredReturn * (termLength / 12);
+                    console.log(annualisedReturn);
+                }
+            }
+
         }
 
     </script>
@@ -83,12 +147,12 @@
     <button onclick="uploadHistoricalData()">Upload</button><br><br>
     <div id="inputDataTableDiv"></div>
     <h2>Processing Parameters</h2>
-    Min Term [months]: <input type="number" value="6"><br><br>
-    Max Term [months]: <input type="number" value="120"><br><br>
-    Term Interval [months]: <input type="number" value="3"><br><br>
-    Min Return [decimal]: <input type="number" value="0.0"><br><br>
-    Max Return [decimal]: <input type="number" value="0.15"><br><br>
-    Return Interval [decimal]: <input type="number" value="0.005"><br><br>
+    Min Term [months]: <input type="number" id="minTerm" value="6"><br><br>
+    Max Term [months]: <input type="number" id="maxTerm" value="120"><br><br>
+    Term Interval [months]: <input type="number" id="termInterval" value="6"><br><br>
+    Min Return [decimal]: <input type="number" id="minReturn" value="-0.15"><br><br>
+    Max Return [decimal]: <input type="number" id="maxReturn" value="0.15"><br><br>
+    Return Interval [decimal]: <input type="number" id="returnInterval" value="0.01"><br><br>
     <button onclick="calculateProbabilites()">Process Data</button>
 </body>
 </html>
