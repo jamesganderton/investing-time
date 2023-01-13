@@ -43,18 +43,12 @@
 
         async function uploadHistoricalData() {
             let file = await document.getElementById("historicalDataInput").files[0].text();
-
             let data = await Papa.parse(file, {
                 header: true,
                 dynamicTyping: true
             });
-
             console.log(data);
-
             inputData = data.data;
-
-            numberSamples = inputData.length;
-
             createInputDataTable();
         }
 
@@ -66,10 +60,19 @@
         let results = [
             {
                 term: 6,
-                returnProbabilities: [
+                returns: [
+                    0.042,
+                    0.056,
+                    -0.122
+                ],
+                returnsBuckets: [
                     {
-                        return: 0,
+                        returnBucket: 0,
                         probability: 1.0
+                    },
+                    {
+                        returnBucket: 0.5,
+                        probability: 0.98
                     }
                 ]
             }
@@ -86,59 +89,71 @@
             // display a graph of term length on x with probability on the y and each line represents a different return.
         
             //first populate an array of terms from the input parameters
-            let minTerm = Number(document.getElementById("minTerm").value);
-            let maxTerm = Number(document.getElementById("maxTerm").value);
-            let termInterval = Number(document.getElementById("termInterval").value);
+            let minTermBucket = Number(document.getElementById("minTerm").value);
+            let maxTermBucket = Number(document.getElementById("maxTerm").value);
+            let termBucketInterval = Number(document.getElementById("termInterval").value);
 
-            for (let i = 0; minTerm + i * termInterval <= maxTerm; i++) {
-                termBuckets.push(minTerm + i * termInterval);
+            for (let i = 0; minTermBucket + i * termBucketInterval <= maxTermBucket; i++) {
+                termBuckets.push(minTermBucket + i * termBucketInterval);
             }
 
             console.log(termBuckets)
 
             //populate an array of return thresholds from inputs
 
-            let minReturn = Number(document.getElementById("minReturn").value);
-            let maxReturn = Number(document.getElementById("maxReturn").value);
-            let returnInterval = Number(document.getElementById("returnInterval").value);
+            let minReturnBucket = Number(document.getElementById("minReturn").value);
+            let maxReturnBucket = Number(document.getElementById("maxReturn").value);
+            let returnBucketInterval = Number(document.getElementById("returnInterval").value);
 
-            for (let i = 0; minReturn + i * returnInterval <= maxReturn; i++) {
-                returnBuckets.push(minReturn + i * returnInterval);
+            for (let i = 0; minReturnBucket + i * returnBucketInterval <= maxReturnBucket; i++) {
+                returnBuckets.push(minReturnBucket + i * returnBucketInterval);
             }
 
             console.log(returnBuckets)
 
-            let termReturns = [];
-
             for (let i = 0; i < termBuckets.length; i++) {
                 console.log("term bucket index: " + i);
-                let termLength = termBuckets[i];
-                termReturns.push({
-                    term: termLength,
-                    returns: []
+                let termBucket = termBuckets[i];
+                results.push({
+                    term: termBucket,
+                    returns: [],
+                    returnBuckets: []
                 })
                 for (let j = 0; j < inputData.length; j++) {
                     console.log("price index: " + j);
                     let firstSampleIndex = j;
-                    let secondSampleIndex = j + termLength;
-                    if (secondSampleIndex > numberSamples - 1) {
+                    let secondSampleIndex = j + termBucket;
+                    if (secondSampleIndex > inputData.length - 1) {
                         break
                     }
                     let firstPrice = inputData[firstSampleIndex].Price;
                     let secondPrice = inputData[secondSampleIndex].Price;
                     let deltaPrice = secondPrice - firstPrice;
                     let measuredReturn = deltaPrice / firstPrice;
-                    let annualisedReturn = measuredReturn * (termLength / 12);
+                    let annualisedReturn = measuredReturn * (termBucket / 12);
                     console.log(annualisedReturn);
-                    termReturns[i].returns.push(annualisedReturn);
+                    results[i].returns.push(annualisedReturn);
                 }
 
-                for (let k = 0; k < termReturns[i].returns.length; k++) {
-                    //calculate the probability for each return bucket
-                }
+                let numberTerms = results[i].returns.length;
 
+                for (let k = 0; k < returnBuckets.length; k++) {
+                    let aboveBucketCount = 0;
+                    for (let l = 0; l < numberTerms; l++) {
+                        if (results[i].returns[l] > returnBuckets[k]) {
+                            aboveBucketCount++
+                        }
+                    }
+                    let probability = aboveBucketCount / numberTerms;
+                    results[i].returnBuckets.push({
+                        returnBucket: returnBuckets[k],
+                        probability: probability
+                    });
+                }
             }
 
+            console.log(results);
+            
         }
 
     </script>
