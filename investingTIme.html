@@ -79,7 +79,36 @@
         ]
         */
 
-        async function calculateProbabilites() {
+        function drawResultsTable() {
+            let table = document.createElement("table");
+            let tHead = document.createElement("thead");
+            let tBody = document.createElement("tbody");
+            let termHeaderRow = document.createElement("tr");
+            let cornerHeader = document.createElement("th");
+            cornerHeader.rowSpan = "2";
+            cornerHeader.colSpan = "2";
+            termHeaderRow.appendChild(cornerHeader);
+            let termHeader = document.createElement("th");
+            termHeader.innerHTML = "Terms [months]"
+            termHeader.colSpan = termBuckets.length;
+            termHeaderRow.appendChild(termHeader);
+            tHead.appendChild(termHeaderRow);
+            let termBucketHeaderRow = document.createElement("tr");
+            for (let i = 0; i < termBuckets.length; i++) {
+                let th = document.createElement("th");
+                th.innerHTML = termBuckets[i];
+                termBucketHeaderRow.appendChild(th)
+            }
+            tHead.appendChild(termBucketHeaderRow);
+            table.appendChild(tHead);
+            for (let i = 0; i < returnBuckets; i++) {
+                
+            }
+            table.appendChild(tBody);
+            document.getElementById("resultsDiv").appendChild(table);
+        }
+
+        function calculateProbabilites() {
             // add elements for minimum term in months or years and maximum term in months or years. this will drive a for loop.
             // for every term within the range, for through each month in the data, and calculate the delta in price for the term.
             // split potential returns into buckets, add an element for this? and min and max returns?
@@ -150,7 +179,7 @@
                         probability: probability
                     });
                 }
-            }
+            };
 
             console.log(results);
             
@@ -181,5 +210,9 @@
     Max Return [decimal]: <input type="number" id="maxReturn" value="0.15"><br><br>
     Return Interval [decimal]: <input type="number" id="returnInterval" value="0.01"><br><br>
     <button onclick="calculateProbabilites()">Process Data</button>
+    <div id="resultsDiv">
+        <h2>Results</h2>
+        <button onclick="drawResultsTable()">Results Table</button>
+    </div>
 </body>
 </html>
