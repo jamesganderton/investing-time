@@ -111,14 +111,14 @@
             let termReturns = [];
 
             for (let i = 0; i < termBuckets.length; i++) {
-                //console.log("term index: " + i);
+                console.log("term bucket index: " + i);
                 let termLength = termBuckets[i];
                 termReturns.push({
                     term: termLength,
                     returns: []
                 })
                 for (let j = 0; j < inputData.length; j++) {
-                    //console.log("price index: " + j);
+                    console.log("price index: " + j);
                     let firstSampleIndex = j;
                     let secondSampleIndex = j + termLength;
                     if (secondSampleIndex > numberSamples - 1) {
@@ -129,7 +129,7 @@
                     let deltaPrice = secondPrice - firstPrice;
                     let measuredReturn = deltaPrice / firstPrice;
                     let annualisedReturn = measuredReturn * (termLength / 12);
-                    //console.log(annualisedReturn);
+                    console.log(annualisedReturn);
                     termReturns[i].returns.push(annualisedReturn);
                 }
 
