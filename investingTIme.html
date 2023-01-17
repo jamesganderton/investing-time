@@ -65,7 +65,7 @@
                     0.056,
                     -0.122
                 ],
-                returnsBuckets: [
+                returnBuckets: [
                     {
                         returnBucket: 0,
                         probability: 1.0
@@ -101,8 +101,23 @@
             }
             tHead.appendChild(termBucketHeaderRow);
             table.appendChild(tHead);
-            for (let i = 0; i < returnBuckets; i++) {
-                
+            for (let i = 0; i < returnBuckets.length; i++) {
+                let tr = document.createElement("tr");
+                if (i == 0) {
+                    let th = document.createElement("th");
+                    th.innerHTML = "Returns [decimal]";
+                    th.rowSpan = returnBuckets.length;
+                    tr.appendChild(th);
+                }
+                let th = document.createElement("th");
+                th.innerHTML = returnBuckets[i];
+                tr.appendChild(th);
+                for (let j = 0; j < termBuckets.length; j++) {
+                    let td = document.createElement("td");
+                    td.innerHTML = results[j].returnBuckets[i].probability;
+                    tr.appendChild(td);
+                }
+                tBody.appendChild(tr);
             }
             table.appendChild(tBody);
             document.getElementById("resultsDiv").appendChild(table);
@@ -135,7 +150,7 @@
             let returnBucketInterval = Number(document.getElementById("returnInterval").value);
 
             for (let i = 0; minReturnBucket + i * returnBucketInterval <= maxReturnBucket; i++) {
-                returnBuckets.push(minReturnBucket + i * returnBucketInterval);
+                returnBuckets.push(Math.round((minReturnBucket + i * returnBucketInterval) * 10000) / 10000);
             }
 
             console.log(returnBuckets)
@@ -173,7 +188,7 @@
                             aboveBucketCount++
                         }
                     }
-                    let probability = aboveBucketCount / numberTerms;
+                    let probability = Math.round((aboveBucketCount / numberTerms) * 10000) / 10000;
                     results[i].returnBuckets.push({
                         returnBucket: returnBuckets[k],
                         probability: probability
