@@ -1,0 +1,11 @@
+https://www.mindfullyinvesting.com/historical-returns-of-global-stocks/
+
+https://www.mindfullyinvesting.com/articles/6-what-to-invest-in/6-1-historical-returns-and-risks/
+
+http://www.econ.yale.edu/~shiller/data.htm
+
+https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html
+
+https://www.indeed.com/career-advice/career-development/how-to-calculate-standard-deviation
+
+calculate the mean max min, standard deviation for each period. Display this to show that the risk is higher or lower, because probability would suggest going for short terms!
