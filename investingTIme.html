@@ -174,7 +174,7 @@
                     let secondPrice = inputData[secondSampleIndex].Price;
                     let deltaPrice = secondPrice - firstPrice;
                     let measuredReturn = deltaPrice / firstPrice;
-                    let annualisedReturn = measuredReturn * (termBucket / 12);
+                    let annualisedReturn = ((1 + measuredReturn) ** (12 / termBucket)) - 1;
                     console.log(annualisedReturn);
                     results[i].returns.push(annualisedReturn);
                 }
@@ -221,7 +221,7 @@
     Min Term [months]: <input type="number" id="minTerm" value="6"><br><br>
     Max Term [months]: <input type="number" id="maxTerm" value="120"><br><br>
     Term Interval [months]: <input type="number" id="termInterval" value="6"><br><br>
-    Min Return [decimal]: <input type="number" id="minReturn" value="-0.15"><br><br>
+    Min Return [decimal]: <input type="number" id="minReturn" value="0"><br><br>
     Max Return [decimal]: <input type="number" id="maxReturn" value="0.15"><br><br>
     Return Interval [decimal]: <input type="number" id="returnInterval" value="0.01"><br><br>
     <button onclick="calculateProbabilites()">Process Data</button>
