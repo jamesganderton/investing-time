@@ -274,7 +274,8 @@
                     let secondPrice = inputData[secondSampleIndex].Price;
                     let deltaPrice = secondPrice - firstPrice;
                     let measuredReturn = deltaPrice / firstPrice;
-                    let annualisedReturn = ((1 + measuredReturn) ** (12 / termBucket)) - 1;
+                    let annualisedReturn = measuredReturn / (termBucket / 12);
+                    //let annualisedReturn = ((1 + measuredReturn) ** (12 / termBucket)) - 1;
                     //console.log(annualisedReturn);
                     results[i].returns.push(annualisedReturn);
                 }
