@@ -161,18 +161,27 @@
             let div = document.getElementById("resultsDiv");
             let canvas = document.createElement("canvas");
             div.appendChild(canvas);
+            let chartData = [];
+            for (let i = 0; i < returnBuckets.length; i++) {
+                let label = returnBuckets[i];
+                let data = [];
+                for (let j = 0; j < termBuckets.length; j++) {
+                    data.push(results[j].returnBuckets[i].probability);
+                }
+                chartData.push(
+                    {
+                        label: label,
+                        data: data
+                    }
+                )
+            }
             new Chart(
                 canvas,
                 {
                     type: "line",
                     data: {
-                        labels: inputData.map(row => row.Date),
-                        datasets: [
-                            {
-                                label: "Price",
-                                data: inputData.map(row => row.Price)
-                            }
-                        ]
+                        labels: results.map(row => row.term),
+                        datasets: chartData
                     }
                 }
             )
