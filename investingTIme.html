@@ -12,6 +12,14 @@
         let inputData = [];
         let numberMonths = 0;
 
+        let inputStatus;
+        let processingStatus;
+
+        window.onload = function() {
+            inputStatus = document.getElementById("inputStatus");
+            processingStatus = document.getElementById("processingStatus");
+        }
+        
         function createInputDataTable() {
             let tableDiv = document.getElementById("inputDataDiv");
             let tableHeading = document.createElement("h2");
@@ -70,6 +78,8 @@
             });
             inputData = data.data;
             console.log(inputData);
+            inputStatus.innerHTML = "Uploaded"
+            processingStatus.innerHTML = "Ready"
         }
 
         let termBuckets = [];
@@ -242,6 +252,7 @@
             };
 
             console.log(results);
+            processingStatus.innerHTML = "Processed"
         }
 
     </script>
@@ -261,18 +272,22 @@
     <div id="inputDataDiv">
         <h2>Input</h2>
         Historical Data CSV: <input id="historicalDataInput" type="file" accept="text/csv"><br><br>
+        Status: <p id="inputStatus">No Data</p>
         <button onclick="uploadHistoricalData()">Upload</button><br><br>
         <button onclick="createInputDataTable()">Input Table</button><br><br>
         <button onclick="createInputChart()">Input Chart</button><br><br>
     </div>
-    <h2>Processing Parameters</h2>
-    Min Term [months]: <input type="number" id="minTerm" value="6"><br><br>
-    Max Term [months]: <input type="number" id="maxTerm" value="120"><br><br>
-    Term Interval [months]: <input type="number" id="termInterval" value="6"><br><br>
-    Min Return [decimal]: <input type="number" id="minReturn" value="0"><br><br>
-    Max Return [decimal]: <input type="number" id="maxReturn" value="0.15"><br><br>
-    Return Interval [decimal]: <input type="number" id="returnInterval" value="0.01"><br><br>
-    <button onclick="calculateProbabilites()">Process Data</button>
+    <div id="processingDiv">
+        <h2>Processing Parameters</h2>
+        Min Term [months]: <input type="number" id="minTerm" value="6"><br><br>
+        Max Term [months]: <input type="number" id="maxTerm" value="120"><br><br>
+        Term Interval [months]: <input type="number" id="termInterval" value="6"><br><br>
+        Min Return [decimal]: <input type="number" id="minReturn" value="0"><br><br>
+        Max Return [decimal]: <input type="number" id="maxReturn" value="0.15"><br><br>
+        Return Interval [decimal]: <input type="number" id="returnInterval" value="0.01"><br><br>
+        <button onclick="calculateProbabilites()">Process Data</button><br><br>
+        Status: <p id="processingStatus">No Data</p>
+    </div>
     <div id="resultsDiv">
         <h2>Results</h2>
         <button onclick="drawResultsTable()">Results Table</button><br><br>
