@@ -65,6 +65,24 @@
                                 data: inputData.map(row => row.Price)
                             }
                         ]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Date"
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Price"
+                                }
+                            }
+                        }
                     }
                 }
             )
@@ -182,6 +200,24 @@
                     data: {
                         labels: results.map(row => row.term),
                         datasets: chartData
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Term Length [months]"
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Probability of Exceeding Return [decimal]"
+                                }
+                            }
+                        }
                     }
                 }
             )
