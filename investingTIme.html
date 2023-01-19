@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investing Time</title>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.1.2/chart.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.0/dist/chart.umd.min.js"></script>
     <script>
 
         let inputData = [];
         let numberMonths = 0;
 
         function createInputDataTable() {
-            let tableDiv = document.getElementById("inputDataTableDiv");
+            let tableDiv = document.getElementById("inputDataDiv");
             let tableHeading = document.createElement("h2");
             tableHeading.innerHTML = "Input Data";
             tableDiv.appendChild(tableHeading);
@@ -41,15 +41,35 @@
             }
         }
 
+        function createInputChart() {
+            let div = document.getElementById("inputDataDiv");
+            let canvas = document.createElement("canvas");
+            div.appendChild(canvas);
+            new Chart(
+                canvas,
+                {
+                    type: "line",
+                    data: {
+                        labels: inputData.map(row => row.Date),
+                        datasets: [
+                            {
+                                label: "Price",
+                                data: inputData.map(row => row.Price)
+                            }
+                        ]
+                    }
+                }
+            )
+        }
+
         async function uploadHistoricalData() {
             let file = await document.getElementById("historicalDataInput").files[0].text();
             let data = await Papa.parse(file, {
                 header: true,
                 dynamicTyping: true
             });
-            console.log(data);
             inputData = data.data;
-            createInputDataTable();
+            console.log(inputData);
         }
 
         let termBuckets = [];
@@ -80,6 +100,10 @@
         */
 
         function drawResultsTable() {
+            let div = document.getElementById("resultsDiv");
+            let caption = document.createElement("p");
+            caption.innerHTML = "Table to show probability of achieving at least that return for that time period.";
+            div.appendChild(caption);
             let table = document.createElement("table");
             let tHead = document.createElement("thead");
             let tBody = document.createElement("tbody");
@@ -120,7 +144,28 @@
                 tBody.appendChild(tr);
             }
             table.appendChild(tBody);
-            document.getElementById("resultsDiv").appendChild(table);
+            div.appendChild(table);
+        }
+
+        function createResultsChart() {
+            let div = document.getElementById("resultsDiv");
+            let canvas = document.createElement("canvas");
+            div.appendChild(canvas);
+            new Chart(
+                canvas,
+                {
+                    type: "line",
+                    data: {
+                        labels: inputData.map(row => row.Date),
+                        datasets: [
+                            {
+                                label: "Price",
+                                data: inputData.map(row => row.Price)
+                            }
+                        ]
+                    }
+                }
+            )
         }
 
         function calculateProbabilites() {
@@ -141,7 +186,7 @@
                 termBuckets.push(minTermBucket + i * termBucketInterval);
             }
 
-            console.log(termBuckets)
+            //console.log(termBuckets)
 
             //populate an array of return thresholds from inputs
 
@@ -153,10 +198,10 @@
                 returnBuckets.push(Math.round((minReturnBucket + i * returnBucketInterval) * 10000) / 10000);
             }
 
-            console.log(returnBuckets)
+            //console.log(returnBuckets)
 
             for (let i = 0; i < termBuckets.length; i++) {
-                console.log("term bucket index: " + i);
+                //console.log("term bucket index: " + i);
                 let termBucket = termBuckets[i];
                 results.push({
                     term: termBucket,
@@ -164,7 +209,7 @@
                     returnBuckets: []
                 })
                 for (let j = 0; j < inputData.length; j++) {
-                    console.log("price index: " + j);
+                    //console.log("price index: " + j);
                     let firstSampleIndex = j;
                     let secondSampleIndex = j + termBucket;
                     if (secondSampleIndex > inputData.length - 1) {
@@ -175,7 +220,7 @@
                     let deltaPrice = secondPrice - firstPrice;
                     let measuredReturn = deltaPrice / firstPrice;
                     let annualisedReturn = ((1 + measuredReturn) ** (12 / termBucket)) - 1;
-                    console.log(annualisedReturn);
+                    //console.log(annualisedReturn);
                     results[i].returns.push(annualisedReturn);
                 }
 
@@ -197,7 +242,6 @@
             };
 
             console.log(results);
-            
         }
 
     </script>
@@ -214,9 +258,13 @@
 <body>
     <h1>Investing Time</h1>
     <p>This aims to answer the question: "How long do I need to invest in order to get a certain return?"</p>
-    Investing.com Historical Data CSV: <input id="historicalDataInput" type="file" accept="text/csv"><br><br>
-    <button onclick="uploadHistoricalData()">Upload</button><br><br>
-    <div id="inputDataTableDiv"></div>
+    <div id="inputDataDiv">
+        <h2>Input</h2>
+        Historical Data CSV: <input id="historicalDataInput" type="file" accept="text/csv"><br><br>
+        <button onclick="uploadHistoricalData()">Upload</button><br><br>
+        <button onclick="createInputDataTable()">Input Table</button><br><br>
+        <button onclick="createInputChart()">Input Chart</button><br><br>
+    </div>
     <h2>Processing Parameters</h2>
     Min Term [months]: <input type="number" id="minTerm" value="6"><br><br>
     Max Term [months]: <input type="number" id="maxTerm" value="120"><br><br>
@@ -228,7 +276,7 @@
     <div id="resultsDiv">
         <h2>Results</h2>
         <button onclick="drawResultsTable()">Results Table</button><br><br>
-        Table to show probability of achieving at least that return for that time period.<br><br>
+        <button onclick="createResultsChart()">Results Chart</button><br><br>
     </div>
 </body>
 </html>
