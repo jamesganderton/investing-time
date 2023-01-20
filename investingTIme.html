@@ -130,7 +130,7 @@
         function drawResultsTable() {
             let div = document.getElementById("resultsDiv");
             let caption = document.createElement("p");
-            caption.innerHTML = "Table to show probability of achieving at least that return for that time period.";
+            caption.innerHTML = "Table to show probability of achieving more than the return specified for that time period.";
             div.appendChild(caption);
             let table = document.createElement("table");
             let tHead = document.createElement("thead");
@@ -214,7 +214,7 @@
                                 display: true,
                                 title: {
                                     display: true,
-                                    text: "Probability of Exceeding Return [decimal]"
+                                    text: "Probability of Return [decimal]"
                                 }
                             }
                         }
@@ -277,7 +277,7 @@
                     let annualisedReturn = measuredReturn / (termBucket / 12);
                     //let annualisedReturn = ((1 + measuredReturn) ** (12 / termBucket)) - 1;
                     //console.log(annualisedReturn);
-                    results[i].returns.push(annualisedReturn);
+                    results[i].returns.push(measuredReturn);
                 }
 
                 let numberTerms = results[i].returns.length;
@@ -285,7 +285,11 @@
                 for (let k = 0; k < returnBuckets.length; k++) {
                     let aboveBucketCount = 0;
                     for (let l = 0; l < numberTerms; l++) {
-                        if (results[i].returns[l] > returnBuckets[k]) {
+                        let upperLimit = returnBuckets[k + 1];
+                        if (k == returnBuckets.length - 1) {
+                            upperLimit = 1;
+                        }
+                        if (results[i].returns[l] > returnBuckets[k]) {// && results[i].returns[l] < upperLimit) {
                             aboveBucketCount++
                         }
                     }
@@ -326,8 +330,8 @@
     <div id="processingDiv">
         <h2>Processing Parameters</h2>
         Min Term [months]: <input type="number" id="minTerm" value="6"><br><br>
-        Max Term [months]: <input type="number" id="maxTerm" value="120"><br><br>
-        Term Interval [months]: <input type="number" id="termInterval" value="6"><br><br>
+        Max Term [months]: <input type="number" id="maxTerm" value="480"><br><br>
+        Term Interval [months]: <input type="number" id="termInterval" value="12"><br><br>
         Min Return [decimal]: <input type="number" id="minReturn" value="0"><br><br>
         Max Return [decimal]: <input type="number" id="maxReturn" value="0.15"><br><br>
         Return Interval [decimal]: <input type="number" id="returnInterval" value="0.01"><br><br>
